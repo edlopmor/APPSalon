@@ -1,0 +1,19 @@
+{
+    "name": "edlop/app-salon",
+    "description": "Proyecto PHP8, MVC, SQL, SASS, Gulp",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "MVC\\" : "./",
+            "Controllers\\" : "./controllers",
+            "Model\\" : "./models"
+        }
+    },
+    "authors": [
+        {
+            "name": "Edgar López",
+            "email": "edlopmor@hotmail.es"
+        }
+    ],
+    "require": {}
+}
