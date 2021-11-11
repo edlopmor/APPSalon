@@ -1,0 +1,20 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as mixins;
+
+
+
+.acciones{
+    margin-top: v.$separacion;
+    //Si es mayor que una tablet, los ponemos como flex, y uno a mayor distancia del otro
+    @include mixins.tablet{
+        display: flex;
+        justify-content: space-between;
+    }
+    a{
+        color: v.$blanco;
+        //Forzamos el salto de linea
+        display: block;
+        margin-bottom: calc(v.$separacion /2);
+        text-align: center;
+    }
+}

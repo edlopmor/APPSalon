@@ -1,0 +1,29 @@
+@use 'base/mixins' as mixins;
+@use 'base/variables' as v;
+
+.formulario {
+    margin-top: 5rem;
+    width: 100%;
+}
+
+.campo {
+    display: flex;
+    margin-bottom: 2rem;
+    align-items: center;
+
+    label{
+        /*
+        1º numero factor de crecimiento 
+        2º numero shrink
+        3º numero medida base
+        */
+        flex: 0 0 10rem;
+    }
+    input{
+        // El input toma el resto del tamaño 
+        flex: 1;
+        border: none;
+        padding: calc(v.$separacion / 4);
+        border-radius: 2rem;
+    }
+}
