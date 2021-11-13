@@ -1,9 +1,11 @@
 <h1 data-cy="heading-nombre-pagina" 
-    class="nombre-pagina">Recuperar contraseña</h1>
+    class="nombre-pagina">Olvido su password</h1>
 <p  data-cy="heading-descripcion-pagina" 
     class="descripcion-pagina">Reestablezca su password escribiendo su email a continuación</p>
 
-<form class="formulario" action="/retrievePassword" method="POST">
+<?php include_once __DIR__ . '/../templates/alertas.php'; ?>
+
+<form class="formulario" action="/lostPassword" method="POST">
     <div class="campo">
     <input data-cy="input-email" type="email"
                 id="email"

@@ -17,13 +17,16 @@ $router->post('/',[LoginController::class,'login']);
 $router->get('/lostPassword',[LoginController::class,'lostPassword']);
 $router->post('/lostPassword',[LoginController::class,'lostPassword']);
 //Redescribir la contraseña
-// $router->get('/retrievePassword',[LoginController::class,'retrievePassword']);
-// $router->post('/retrievePassword',[LoginController::class,'retrievePassword']);
+ $router->get('/retrievePassword',[LoginController::class,'retrievePassword']);
+ $router->post('/retrievePassword',[LoginController::class,'retrievePassword']);
 //Crear cuenta
 $router->get('/newAccount',[LoginController::class,'newAccount']);
 $router->post('/newAccount',[LoginController::class,'newAccount']);
 
 $router->get('/confirmarCuenta',[LoginController::class,'confirmarCuenta']);
 $router->get('/mensaje',[LoginController::class,'mensaje']);
+
+
+
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

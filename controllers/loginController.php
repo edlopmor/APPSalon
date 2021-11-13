@@ -51,21 +51,64 @@ class LoginController{
         echo "desde logout";
     }
     public static function lostPassword(Router $router){
+        $alertas = [];
         if($_SERVER['REQUEST_METHOD']==='POST'){
-            
+            $auth = new Usuario($_POST);
+            $alertas =$auth->validarMail();
+            if(empty($alertas)){
+                $usuario = Usuario::where('email',$auth->email);
+                if ($usuario && $usuario->confirmado === "1"){
+                    //Generar un token de un solo uso 
+                    $usuario->crearToken();
+                    //Actualizar el usuario para añadirle token nuevo en la base de datos                    
+                    $resultado = $usuario->actualizar($usuario->id);
+                    //Comentado para no enviar emails en cada prueba
+                    $email = new Email($usuario->email,$usuario->nombre,$usuario->token);
+                    $email->enviarInstrucciones();
+                        if($resultado){Usuario::setAlerta('exito','Enviado mensaje de recuperación');}
+                }else{
+                    Usuario::setAlerta('error','El usuario no existe o no ha sido confirmado.');
+                }
+            }
         }
+        $alertas= Usuario::getAlertas();
         $router->render('auth/lostPassword',[
-            
+            'alertas' => $alertas
         ]);
     }
-    // public static function retrievePassword(Router $router){
-    //     if($_SERVER['REQUEST_METHOD']==='POST'){
-            
-    //     }
-    //     $router->render('auth/lostPassword',[
-            
-    //     ]);
-    // }
+    public static function retrievePassword(Router $router){
+        $alertas = [];
+        $error = false;
+        $token = sanear($_GET['token']);
+        //Buscar el usuario por el token;
+        $usuario = Usuario::where('token',$token);
+        if(empty($usuario)){
+            Usuario::setAlerta('error','Token no valido');
+            $error= true;
+        }
+        if($_SERVER['REQUEST_METHOD']==='POST'){
+            $password = new Usuario($_POST);
+            $alertas = $password->validarPassword();
+
+            if (empty($alertas)){
+                 $usuario->password = null;                
+                 $usuario->password = $password->password;
+                 $usuario->hashPassword();
+                 $usuario->token= null;
+                 $resultado =$usuario->actualizar($usuario->id);
+                 if($resultado){
+                     header('Location: /');
+                 }
+                 
+
+            }
+         }
+        $alertas= Usuario::getAlertas();
+        $router->render('auth/retrievePassword',[
+            'alertas' => $alertas,
+            'error' => $error
+        ]);
+    }
     public static function newAccount(Router $router){
         $usuario = new Usuario();
         //Array de errores

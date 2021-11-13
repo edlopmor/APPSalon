@@ -46,6 +46,16 @@ class Usuario extends ActiveRecord {
         if(!$this->password) { self::$alertas['error'] [] = "Debe introducir una contraseña" ;}
         return self::$alertas;
     }
+    public function validarMail(){
+        if(!$this->email) { self::$alertas['error'] [] = "Su email es obligatorio" ;}
+        return self::$alertas;
+    }
+    public function validarPassword(){
+        if(!$this->password) { self::$alertas['error'] [] = "Debe introducir una contraseña" ;}
+        if(strlen($this->password)< 6) {self::$alertas['error'] [] = "La contraseña debe contener al menos 6 caracteres" ;}
+        return self::$alertas;
+    }
+        
     //Comprueba si el usuario existe en la base de datos. 
     public function existeUsuario(){
         $query = "SELECT * FROM ". self::$tabla ." WHERE email = '".$this->email ."' LIMIT 1";
