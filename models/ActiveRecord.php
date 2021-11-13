@@ -89,23 +89,6 @@ class ActiveRecord {
           }
         }
     }
-
-    // Registros - CRUD
-    public function guardar() {
-        $resultado = '';
-        
-        if(!is_null($this->id)) {
-            // actualizar
-            $resultado = $this->actualizar();
-        } else {
-            
-            // Creando un nuevo registro
-            $resultado = $this->crear();
-            
-        }
-        return $resultado;
-    }
-
     // Todos los registros
     public static function all() {
         $query = "SELECT * FROM " . static::$tabla;
@@ -144,10 +127,10 @@ class ActiveRecord {
         $query .= " ) VALUES (' "; 
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
-        debuguear($query);
+        
         // Resultado de la consulta
         $resultado = self::$db->query($query);
-        debuguear($resultado);
+        
         // return [
         //    'resultado' => $resultado,
         //    'id' => self::$db->insert_id
@@ -155,7 +138,7 @@ class ActiveRecord {
     }
 
     // Actualizar el registro
-    public function actualizar() {
+    public function actualizar($id) {
         // Sanitizar los datos
         $atributos = $this->sanitizarAtributos();
 
@@ -168,7 +151,7 @@ class ActiveRecord {
         // Consulta SQL
         $query = "UPDATE " . static::$tabla ." SET ";
         $query .=  join(', ', $valores );
-        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= " WHERE id = '" . self::$db->escape_string($id) . "' ";
         $query .= " LIMIT 1 "; 
 
         // Actualizar BD

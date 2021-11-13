@@ -3,14 +3,15 @@
     class="nombre-pagina">Login</h1>
 <p  data-cy="heading-descripcion-pagina" 
     class="descripcion-pagina">Inicia sesión con tus datos</p>
-
+<?php include_once __DIR__ . '/../templates/alertas.php'; ?>
 <form data-cy="formulario-login" class="formulario-login" method="POST" action="/">
     <div class="campo">
         <label for="email">Email</label>
         <input data-cy="input-email" type="email"
                 id="email"
                 placeholder="Introduzca su email"
-                name="email"
+                name="email"               
+                value="<?php echo sanear($auth->email); ?>"
         />
     </div>
     <div class="campo">

@@ -7,7 +7,45 @@ use MVC\Router;
 
 class LoginController{
     public static function login(Router $router){
-        $router->render('auth/login');
+        $alertas = [];
+        $auth = new Usuario();
+        if($_SERVER['REQUEST_METHOD']==='POST'){
+            
+            $auth = new Usuario($_POST)?? null;
+            //Obtenemos un usuario completo, solo necesitamos el campo mail y el campo password.
+            $alertas= $auth->validarLogin();
+
+            if(empty($alertas)){
+                //Comprobar que exista el usuario 
+                $usuario = Usuario::where('email',$auth->email);
+                if($usuario){
+                    //Verificamos usuario confirmado y password
+                    if($usuario->comprobarPasswordAndVerificado($auth->password)){
+                                            
+                        $_SESSION['id'] = $usuario->id;
+                        $_SESSION['nombre'] = $usuario->nombre. " " . $usuario->apellido;
+                        $_SESSION['email'] = $usuario->email;
+                        $_SESSION['login'] = true;
+                        
+                        if($usuario->admin === "1"){
+                            $_SESSION['admin'] = $usuario->admin ?? null;
+                           header ('Location: /admin');
+                        }else{
+                            //Es cliente
+                            header('Location: /cita');
+                        }
+                    }                                      
+                }else{
+                    Usuario::setAlerta('error','Usuario no encontrado');
+                }
+            }
+        }
+        $alertas= Usuario::getAlertas();
+        
+        $router->render('auth/login',[
+            'alertas' => $alertas,
+            'auth' => $auth
+        ]);
     }
     public static function logout(){
         echo "desde logout";
@@ -49,8 +87,9 @@ class LoginController{
                     //Creamos un nuevo mail, y lo enviamos 
                     // $email = new Email($usuario->email,$usuario->nombre,$usuario->token);
                     // $email->enviarConfirmacion();
-
-                    $resultado = $usuario->guardar();
+                    
+                    $resultado = $usuario->crear();
+                    debuguear($resultado);
                         if($resultado){
                             header('location: /mensaje');
                         }
@@ -77,7 +116,7 @@ class LoginController{
             $usuario->confirmado = 1;
             //Borrar su token unico para que no se pueda volver a utilizar
             $usuario->token = null;        
-            $resultado = $usuario->guardar();
+            $resultado = $usuario->actualizar($usuario->id);
             //Si el resultado de la operacion guardar es verdadero , informamos al usuario. 
             if ($resultado){
                 Usuario::setAlerta('exito','Cuenta activada con exito');
@@ -85,7 +124,7 @@ class LoginController{
         }
         //Obtener las alertas         
         $alertas = Usuario::getAlertas();
-        
+
         $router->render('auth/confirmarCuenta',[
             'alertas' => $alertas
         ]);       

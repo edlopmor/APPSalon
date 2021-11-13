@@ -40,6 +40,12 @@ class Usuario extends ActiveRecord {
         if(strlen($this->password)< 6) {self::$alertas['error'] [] = "La contraseña debe contener al menos 6 caracteres" ;}   
         return self::$alertas;
     }
+    //Validar login 
+    public function validarLogin(){
+        if(!$this->email) { self::$alertas['error'] [] = "Su email es obligatorio" ;}
+        if(!$this->password) { self::$alertas['error'] [] = "Debe introducir una contraseña" ;}
+        return self::$alertas;
+    }
     //Comprueba si el usuario existe en la base de datos. 
     public function existeUsuario(){
         $query = "SELECT * FROM ". self::$tabla ." WHERE email = '".$this->email ."' LIMIT 1";
@@ -57,5 +63,15 @@ class Usuario extends ActiveRecord {
      public function crearToken(){
         $this->token = uniqid();
      }
+     //Comprobar el password
+     public function comprobarPasswordAndVerificado($password){
+        //Comprobar el password
+        $resultado = password_verify($password,$this->password);
+        if(!$resultado || !$this->confirmado){
+            self::$alertas['error'][] = 'Password incorrecto o cuenta no verificada';
+        }
+            return true;
+        }
+     }
+     
     
-}
