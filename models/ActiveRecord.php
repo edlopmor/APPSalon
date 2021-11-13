@@ -80,7 +80,8 @@ class ActiveRecord {
         return $sanitizado;
     }
 
-    // Sincroniza BD con Objetos en memoria
+    /* Sincroniza BD con Objetos en memoria, 
+    evitando de esta forna que el usuario que ha rellenado datos en un formulario los pierda*/
     public function sincronizar($args=[]) { 
         foreach($args as $key => $value) {
           if(property_exists($this, $key) && !is_null($value)) {
@@ -92,12 +93,15 @@ class ActiveRecord {
     // Registros - CRUD
     public function guardar() {
         $resultado = '';
+        
         if(!is_null($this->id)) {
             // actualizar
             $resultado = $this->actualizar();
         } else {
+            
             // Creando un nuevo registro
             $resultado = $this->crear();
+            
         }
         return $resultado;
     }
@@ -122,25 +126,32 @@ class ActiveRecord {
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
     }
+    //Busca un regisro por el atributo que pongamos . Poner columna y valor a buscar
+    public static function where($columna,$valor) {
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE ${columna} = '${valor}' ";
+        $resultado = self::consultarSQL($query);
+        return array_shift( $resultado ) ;
+    }
 
     // crea un nuevo registro
     public function crear() {
         // Sanitizar los datos
         $atributos = $this->sanitizarAtributos();
-
+        
         // Insertar en la base de datos
-        $query = " INSERT INTO " . static::$tabla . " ( ";
+        $query = " INSERT INTO " . static::$tabla . "( ";
         $query .= join(', ', array_keys($atributos));
         $query .= " ) VALUES (' "; 
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
-
+        debuguear($query);
         // Resultado de la consulta
         $resultado = self::$db->query($query);
-        return [
-           'resultado' =>  $resultado,
-           'id' => self::$db->insert_id
-        ];
+        debuguear($resultado);
+        // return [
+        //    'resultado' => $resultado,
+        //    'id' => self::$db->insert_id
+        // ];
     }
 
     // Actualizar el registro

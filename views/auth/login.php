@@ -9,7 +9,7 @@
         <label for="email">Email</label>
         <input data-cy="input-email" type="email"
                 id="email"
-                placeholder="Introduce tu email"
+                placeholder="Introduzca su email"
                 name="email"
         />
     </div>
@@ -17,13 +17,13 @@
         <label for="password">Password</label>
         <input data-cy="input-password" type="password"
                 id="password"
-                placeholder="Introduce tu password"
+                placeholder="Introduzca su contraseña"
                 name="password"
         />
     </div>
     <input data-cy="input-submit" type="submit" class="boton" value="Iniciar sesión">
 </form>
 <div class="acciones">
-    <a data-cy="a-newAccount" href="/newAccount">¿Aun no tienes una cuenta?</a>
-    <a data-cy="a-retrievePassword" href="/retrievePassword">Olvidaste tu contraseña</a>
+    <a data-cy="a-newAccount" href="/newAccount">¿Aun no tiene una cuenta?</a>
+    <a data-cy="a-lostPassword" href="/lostPassword">Olvido su contraseña</a>
 </div>

@@ -13,6 +13,6 @@
     <input type="submit" class="boton" value="Enviar instrucciones">
 </form>
 <div class="acciones">
-    <a data-cy="a-login" href="/">¿Ya tienes una cuena? Inicie sesión</a>
-    <a data-cy="a-newAccount" href="/newAccount">¿Aun no tienes una cuenta?Cree una</a>
+    <a data-cy="a-login" href="/">¿Ya tiene una cuenta? Inicie sesión</a>
+    <a data-cy="a-newAccount" href="/newAccount">¿Aun no tiene una cuenta? Cree una</a>
 </div>
