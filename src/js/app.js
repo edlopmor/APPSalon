@@ -25,6 +25,9 @@ function iniciarApp(){
     paginaAnterior();
     //Consultar la api en el backend php
     consultarAPI();
+    nombreCliente();
+    seleccionarFecha();
+    seleccionarHora();
 }
 function mostrarSeccion(){
     //Ocultar la seccion que tenga la clase de mostrar 
@@ -165,4 +168,64 @@ function seleccionarServicio(servicio){
         divServicio.classList.add('seleccionado');
     }      
     console.log(cita);
+}
+//Obtiene el nombre del cliente 
+function nombreCliente(){
+    //obtenes el nombre del input.
+    const nombre = document.querySelector('#nombre').value ;
+    //Agregarlo a cita
+    cita.nombre = nombre;
+}
+
+function seleccionarFecha(){
+    const inputFecha = document.querySelector('#fecha');
+    inputFecha.addEventListener('input', function (e){
+        //Get utcDay retorna los dias del 0 al 6. Siendo el domingo 0 y el sabado 6. 
+        const dia = new Date(e.target.value).getUTCDay();
+        //Si el dia es 6-domingo o 0sabado
+        if( [6, 0].includes(dia) ){
+            e.target.value = '';
+            mostrarAlerta('Sabados y domingo no abrimos','error');        
+        }else{
+            cita.fecha = e.target.value;
+        }   
+        
+    });
+}
+//Añade la hora 
+function seleccionarHora(){
+    const inputHora = document.querySelector('#hora');
+    inputHora.addEventListener('input', function(e){
+        const horaCita =e.target.value;
+        const hora = horaCita.split(":")[0];
+        //TODO Obtener este horario desde administrador.
+        if(hora > 9 && hora < 14){
+            //Turno de mañana
+            cita.hora= e.target.value
+        }else if (hora > 15 && hora < 20) {
+            //Turno de tarde
+            cita.hora= e.target.value
+        }else{
+            mostrarAlerta('Fuera de horario laboral','error')
+        }
+    })
+}
+function mostrarAlerta(mensaje, tipo){
+    const alertaPrevia = document.querySelector('.alerta');
+    if(alertaPrevia) return; 
+        //Creamos la alerta   
+        const alerta = document.createElement('DIV');
+        //Añadimos el mensaje
+        alerta.textContent= mensaje;
+        //Añadimos la clase 
+        alerta.classList.add('alerta') 
+
+        alerta.classList.add(tipo)
+
+        const formulario = document.querySelector('.formulario');
+        formulario.appendChild(alerta);
+        setTimeout(()=>{alerta.remove();}
+        ,3000);
+    
+        
 }
