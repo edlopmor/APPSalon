@@ -25,9 +25,12 @@ function iniciarApp(){
     paginaAnterior();
     //Consultar la api en el backend php
     consultarAPI();
+
     nombreCliente();
+
     seleccionarFecha();
     seleccionarHora();
+
 }
 function mostrarSeccion(){
     //Ocultar la seccion que tenga la clase de mostrar 
@@ -55,9 +58,7 @@ function tabs(){
         boton.addEventListener('click',function(event) {
             paso = parseInt(event.target.dataset.paso)
             mostrarSeccion();
-
-            botonesPaginador();
-            
+            botonesPaginador();            
         })
     });
     
@@ -72,6 +73,7 @@ function botonesPaginador(){
     else if(paso===3){
         buttonPaginaAnterior.classList.remove('ocultar');
         buttonPaginaSiguiente.classList.add('ocultar');
+        mostrarResumen();
     }else{
         buttonPaginaAnterior.classList.remove('ocultar');
         buttonPaginaSiguiente.classList.remove('ocultar');
@@ -167,7 +169,7 @@ function seleccionarServicio(servicio){
         //Agregar la clase al html 
         divServicio.classList.add('seleccionado');
     }      
-    console.log(cita);
+    
 }
 //Obtiene el nombre del cliente 
 function nombreCliente(){
@@ -185,7 +187,7 @@ function seleccionarFecha(){
         //Si el dia es 6-domingo o 0sabado
         if( [6, 0].includes(dia) ){
             e.target.value = '';
-            mostrarAlerta('Sabados y domingo no abrimos','error');        
+            mostrarAlerta('Sabados y domingo no abrimos','error','.formulario');        
         }else{
             cita.fecha = e.target.value;
         }   
@@ -206,13 +208,15 @@ function seleccionarHora(){
             //Turno de tarde
             cita.hora= e.target.value
         }else{
-            mostrarAlerta('Fuera de horario laboral','error')
+            mostrarAlerta('Fuera de horario laboral','error','.formulario')
         }
     })
 }
-function mostrarAlerta(mensaje, tipo){
+function mostrarAlerta(mensaje, tipo, elemento,desaparece=true){
     const alertaPrevia = document.querySelector('.alerta');
-    if(alertaPrevia) return; 
+    if(alertaPrevia) {
+        alertaPrevia.remove();
+    }; 
         //Creamos la alerta   
         const alerta = document.createElement('DIV');
         //Añadimos el mensaje
@@ -222,10 +226,93 @@ function mostrarAlerta(mensaje, tipo){
 
         alerta.classList.add(tipo)
 
-        const formulario = document.querySelector('.formulario');
-        formulario.appendChild(alerta);
+        const referencia = document.querySelector(elemento);
+        referencia.appendChild(alerta);
+        if(desaparece){ 
         setTimeout(()=>{alerta.remove();}
         ,3000);
-    
+        }
         
+}
+//Formatea la fecha, haciendola mas legible para el usuario 
+function formatearFecha(fecha){
+    const fechaObject = new Date(fecha);
+    const dia = fechaObject.getDate();
+    const mes = fechaObject.getMonth();  
+    const year = fechaObject.getFullYear();
+
+    const fechaUTC = new Date(Date.UTC(year,mes,dia));
+    const opciones = { weekday :'long',day:'numeric',month:'long',year:'numeric'}
+    const fechaFormateada = fechaUTC.toLocaleDateString('es-ES',opciones);
+    return fechaFormateada;
+}
+//Muestra el resumen de la cita. 
+function mostrarResumen(){
+    const resumen = document.querySelector('.contenido-resumen');
+    //Destructuring al objeto
+    const {nombre,fecha,hora,servicios} = cita;
+    //Limpiar el contenido de resumen 
+    while(resumen.firstChild){
+        resumen.removeChild(resumen.firstChild);
+    }    
+    if( Object.values(cita).includes('') || cita.servicios.length === 0){       
+        mostrarAlerta('Faltan datos de servicios, fecha u hora','error','.contenido-resumen',false);
+        return;
+    }
+    //Creamos el heading
+    crearHeadingResumen(resumen);       
+    //Añadimos en el orden que deseamos que aparezcan los datos.
+    crearContenidoResumenCita(resumen,cita); 
+    //Variable para calcular el precio total 
+    let precioTotal = 0;
+    servicios.forEach(servicio =>{  
+        //Destructuring al objeto 
+        const {id, precio, nombre} = servicio;
+        //Sumatorio del precio total 
+        precioTotal += parseInt( precio);   
+
+        const contenedorServicio = document.createElement('DIV');
+            contenedorServicio.classList.add('contenedor-servicio');
+        const textoServicio = document.createElement('P');
+            textoServicio.textContent = nombre;      
+        const precioServicio = document.createElement('DIV');
+            precioServicio.innerHTML = `<span> Precio: </span> ${precio} €`;
+            contenedorServicio.appendChild(textoServicio);
+            contenedorServicio.appendChild(precioServicio);
+        resumen.appendChild(contenedorServicio);
+    });
+    
+    const totalTexto = document.createElement('H2');
+    totalTexto.innerHTML = `<span> Total: </span> ${precioTotal} €`;
+    resumen.appendChild(totalTexto);   
+
+    //Crear boton
+    
+    const botonReservar = document.createElement('BUTTON');
+    botonReservar.classList.add('boton');
+    botonReservar.textContent = "Reservar cita";
+    botonReservar.onclick = reservarCita;
+    
+    resumen.appendChild(botonReservar);
+    
+}
+function reservarCita(){
+}
+function crearHeadingResumen(resumen){
+    const headingCita = document.createElement('H2');
+        headingCita.textContent = 'Resumen cita';
+        resumen.appendChild(headingCita);
+}
+function crearContenidoResumenCita(resumen,cita){
+    const {nombre,fecha,hora} = cita;
+    const nombreCliente = document.createElement('P');
+    nombreCliente.innerHTML = `<span>Nombre : </span>${nombre}`;
+    resumen.appendChild(nombreCliente);
+fechaFormateada = formatearFecha(fecha);
+const fechaCita = document.createElement('P');
+    fechaCita.innerHTML = `<span>Fecha : </span>${fechaFormateada}`;
+    resumen.appendChild(fechaCita);
+const horaCita = document.createElement('P');
+    horaCita.innerHTML = `<span>Hora : </span>${hora}`;
+    resumen.appendChild(horaCita);
 }
