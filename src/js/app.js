@@ -296,7 +296,20 @@ function mostrarResumen(){
     resumen.appendChild(botonReservar);
     
 }
-function reservarCita(){
+async function reservarCita(){
+    const datos = new FormData();
+    datos.append('nombre','Juan');
+    //Peticion hacia la api 
+    const url = 'http://localhost:3000/api/citas';
+    const respuesta = await fetch(url ,{
+        method: 'POST'
+    });
+    console.log(respuesta);
+
+
+
+    
+    
 }
 function crearHeadingResumen(resumen){
     const headingCita = document.createElement('H2');

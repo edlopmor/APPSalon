@@ -11,13 +11,14 @@ class Email{
         }
 
         public function enviarConfirmacion(){
+            $passwordsEmail = new PasswordsEmail();
             //Crear el objeto de mail 
             $mail = new PHPMailer();
             $mail->isSMTP();
             $mail->Host = 'smtp.mailtrap.io';
             $mail->SMTPAuth = true;
-            $mail->Username = 'dfe69aedb966b2';
-            $mail->Password = '0eeffed6ca8a3b';
+            $mail->Username = $passwordsEmail->Username;
+            $mail->Password = $passwordsEmail->Password;
             $mail->SMTPSecure = 'tls';
             $mail->Port = 2525;
 

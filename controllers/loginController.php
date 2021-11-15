@@ -2,11 +2,14 @@
 namespace Controllers;
 
 use Classes\Email;
+use Classes\PasswordsEmail;
 use Model\Usuario;
 use MVC\Router;
 
 class LoginController{
     public static function login(Router $router){
+        $prueba = new PasswordsEmail;
+        debuguear($prueba->email);
         $alertas = [];
         $auth = new Usuario();
         if($_SERVER['REQUEST_METHOD']==='POST'){
