@@ -130,7 +130,7 @@ class ActiveRecord {
         $query .= " ') ";
 
         //Realizar debug al insert a traves de la API
-        //return json_encode(['query' =>$query]);
+        // return json_encode(['query' =>$query]);
         
         // Resultado de la consulta
         $resultado = self::$db->query($query);

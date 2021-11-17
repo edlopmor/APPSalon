@@ -340,8 +340,8 @@ async function reservarCita(){
             })
         }
     }catch (error){
-        Swal.fire({icon: 'error',title: 'Error',text:  'Hubo un error al guardar la cita '
-    });
+        console.log(error);
+        Swal.fire({icon: 'error',title: 'Error',text:  'Hubo un error al guardar la cita '});
     } 
 }
 
