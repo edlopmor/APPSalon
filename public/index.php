@@ -13,7 +13,7 @@ $router = new Router();
 $router->get('/',[LoginController::class,'login']);
 $router->post('/',[LoginController::class,'login']);
 
-// $router->post('/',[LoginController::class,'logout']);
+$router->get('/logout',[LoginController::class,'logout']);
 
 //Contraseña perdida
 $router->get('/lostPassword',[LoginController::class,'lostPassword']);

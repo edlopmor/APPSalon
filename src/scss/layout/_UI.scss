@@ -22,3 +22,18 @@
         
     }
 }
+.barra-nombre{
+    margin-bottom: 6rem;
+    @include mixins.tablet {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+    }
+    .boton{
+        @include mixins.boton(v.$negro, v.$blanco);
+        margin: 0;
+        border-radius: 2rem;
+        
+    }
+}

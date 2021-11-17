@@ -12,3 +12,10 @@ function sanear($html) : string {
     $s = htmlspecialchars($html);
     return $s;
 }
+
+//Funcion para revisar si el usuario esta autenticado
+function estaAutenticado(): void{
+    if(!isset($_SESSION['login'])){
+        header('Location: /');
+    }
+}
