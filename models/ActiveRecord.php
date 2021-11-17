@@ -119,6 +119,7 @@ class ActiveRecord {
     // crea un nuevo registro
     public function crear() {
         // Sanitizar los datos
+        
         $atributos = $this->sanitizarAtributos();
         
         // Insertar en la base de datos
@@ -127,14 +128,17 @@ class ActiveRecord {
         $query .= " ) VALUES (' "; 
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
+
+        //Realizar debug al insert a traves de la API
+        //return json_encode(['query' =>$query]);
         
         // Resultado de la consulta
         $resultado = self::$db->query($query);
         
-        // return [
-        //    'resultado' => $resultado,
-        //    'id' => self::$db->insert_id
-        // ];
+        return [
+           'resultado' => $resultado,
+           'id' => self::$db->insert_id
+         ];
     }
 
     // Actualizar el registro

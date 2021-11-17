@@ -5,6 +5,7 @@ let paso = 1;
 let pasoInicial = 1;
 let pasoFinal = 3;
 const cita = {
+    id='',
     nombre='',
     fecha='',
     hora='',
@@ -25,7 +26,7 @@ function iniciarApp(){
     paginaAnterior();
     //Consultar la api en el backend php
     consultarAPI();
-
+    idCliente();
     nombreCliente();
 
     seleccionarFecha();
@@ -178,6 +179,10 @@ function nombreCliente(){
     //Agregarlo a cita
     cita.nombre = nombre;
 }
+function idCliente(){
+    const id = document.querySelector('#id').value;
+    cita.id= id;
+}
 
 function seleccionarFecha(){
     const inputFecha = document.querySelector('#fecha');
@@ -260,9 +265,21 @@ function mostrarResumen(){
         return;
     }
     //Creamos el heading
-    crearHeadingResumen(resumen);       
+    
+    const headingCita = document.createElement('H2');
+        headingCita.textContent = 'Resumen cita';
+        resumen.appendChild(headingCita);       
     //Añadimos en el orden que deseamos que aparezcan los datos.
-    crearContenidoResumenCita(resumen,cita); 
+    const nombreCliente = document.createElement('P');
+    nombreCliente.innerHTML = `<span>Nombre : </span>${nombre}`;
+    resumen.appendChild(nombreCliente);
+    fechaFormateada = formatearFecha(fecha);
+    const fechaCita = document.createElement('P');
+    fechaCita.innerHTML = `<span>Fecha : </span>${fechaFormateada}`;
+    resumen.appendChild(fechaCita);
+    const horaCita = document.createElement('P');
+    horaCita.innerHTML = `<span>Hora : </span>${hora}`;
+    resumen.appendChild(horaCita); 
     //Variable para calcular el precio total 
     let precioTotal = 0;
     servicios.forEach(servicio =>{  
@@ -293,39 +310,39 @@ function mostrarResumen(){
     botonReservar.textContent = "Reservar cita";
     botonReservar.onclick = reservarCita;
     
-    resumen.appendChild(botonReservar);
-    
+    resumen.appendChild(botonReservar);    
 }
 async function reservarCita(){
+    //Destructuring
+    const {id, fecha, hora , servicios}= cita;
+    // //Capturamos los ids de los servicios seleccionados. 
+    const idServicios = servicios.map( servicio => servicio.id);
+
     const datos = new FormData();
-    datos.append('nombre','Juan');
-    //Peticion hacia la api 
-    const url = 'http://localhost:3000/api/citas';
-    const respuesta = await fetch(url ,{
-        method: 'POST'
+    datos.append("usuarioId",id);
+    datos.append("fecha",fecha);
+    datos.append("hora",hora);
+    datos.append("servicios",idServicios);
+
+    try{ 
+        const url = 'http://localhost:3000/api/citas';
+        const respuesta = await fetch(url ,{
+            method: 'POST',
+            body: datos         
+        });       
+        const resultado = await respuesta.json();
+        if (resultado.resultado){
+            Swal.fire({icon: 'success',title: 'Cita creada',text: 'Cita creada con exito'               
+            }).then( ()=>{
+                setTimeout(() => {
+                window.location.reload();
+            },2000);
+            })
+        }
+    }catch (error){
+        Swal.fire({icon: 'error',title: 'Error',text:  'Hubo un error al guardar la cita '
     });
-    console.log(respuesta);
+    } 
+}
 
 
-
-    
-    
-}
-function crearHeadingResumen(resumen){
-    const headingCita = document.createElement('H2');
-        headingCita.textContent = 'Resumen cita';
-        resumen.appendChild(headingCita);
-}
-function crearContenidoResumenCita(resumen,cita){
-    const {nombre,fecha,hora} = cita;
-    const nombreCliente = document.createElement('P');
-    nombreCliente.innerHTML = `<span>Nombre : </span>${nombre}`;
-    resumen.appendChild(nombreCliente);
-fechaFormateada = formatearFecha(fecha);
-const fechaCita = document.createElement('P');
-    fechaCita.innerHTML = `<span>Fecha : </span>${fechaFormateada}`;
-    resumen.appendChild(fechaCita);
-const horaCita = document.createElement('P');
-    horaCita.innerHTML = `<span>Hora : </span>${hora}`;
-    resumen.appendChild(horaCita);
-}
