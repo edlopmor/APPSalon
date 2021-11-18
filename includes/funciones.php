@@ -19,3 +19,9 @@ function estaAutenticado(): void{
         header('Location: /');
     }
 }
+function esUltimo ($actual,$proximo): bool{
+    if($actual !== $proximo){
+        return true;
+    }
+    return false;
+}
