@@ -8,10 +8,16 @@
             <input 
                 type="date"
                 id="fecha"
-                name="fecha">
+                name="fecha"
+                value= "<?php echo $fecha ?>">
         </div>
     </form>
 </div>
+<?php
+    if (count($listaCitas) === 0){
+        echo "<h2> No hay citas en esta fecha </h2>";
+    }
+?>
 <div id = "citas-admin">
     <ul class="citas">
         <?php 
@@ -52,3 +58,6 @@
     </ul>
      
 </div>
+<?php 
+        $script = "<script src = 'build/js/buscador.js'></script>" ;
+?>
