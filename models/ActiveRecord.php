@@ -133,7 +133,7 @@ class ActiveRecord {
         $query .= " ) VALUES (' "; 
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
-
+        
         //Realizar debug al insert a traves de la API
         // return json_encode(['query' =>$query]);
         
@@ -171,7 +171,9 @@ class ActiveRecord {
     // Eliminar un Registro por su ID
     public function eliminar() {
         $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
+        
         $resultado = self::$db->query($query);
+        
         return $resultado;
     }
 

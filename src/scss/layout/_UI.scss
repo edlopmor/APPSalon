@@ -37,3 +37,17 @@
         
     }
 }
+.barra-servicios{
+    margin-bottom: v.$separacion;
+    @include mixins.tablet{
+        display: flex;
+        justify-content: space-between;
+        
+    }
+    
+    
+    .boton{       
+        margin: 0 0 1rem 0;
+        
+    }
+}

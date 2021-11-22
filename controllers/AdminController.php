@@ -6,6 +6,10 @@ use MVC\Router;
 
 class AdminController {
     public static function index(Router $router){
+         
+         isAdmin();
+         
+ 
          $fechaHoy = date('Y-m-d');         
          $fecha = $_GET['fecha'] ?? $fechaHoy ;
          //Rompemos la cadena de la fecha para poder comprobarla y pasarsela al chekdate. 

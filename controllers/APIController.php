@@ -31,5 +31,19 @@ class APIController{
         
         echo json_encode(['resultado'=>$resultado]);
     }
+    public static function eliminar(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $id = $_POST['id'];
+            //Cargamos una instancia de la cita con el id que obtenemos de post. 
+            $cita = Cita::find($id);
+            //Procedemos a eliminar la cita. 
+            $resultado = $cita->eliminar();
+            if($resultado){
+                header('Location:' . $_SERVER['HTTP_REFERER']); 
+            }else {
+                echo "No se ha podido eliminar la cita";
+            }          
+        }      
+    }
 }
 ?>

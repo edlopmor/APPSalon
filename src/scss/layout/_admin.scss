@@ -14,15 +14,27 @@
         span,
         .servicio{
             font-weight: v.$regular;
+            color: v.$blanco;
         }
     }
     .total{
         text-align: center;
-        text-si
         font-weight: v.$bold;
             color: v.$azul;
         span{
             color: v.$blanco;
         }
+    }
+}
+.servicios{
+    @extend .citas;
+
+    .acciones{
+        margin:0;
+    }
+    .boton,
+    .boton-eliminar{
+        border-radius: 2rem;
+        margin:0;
     }
 }
