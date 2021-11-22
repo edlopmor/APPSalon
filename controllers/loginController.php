@@ -10,6 +10,9 @@ class LoginController{
     public static function login(Router $router){
         $alertas = [];
         $auth = new Usuario();
+        //Si iniciabamos session con un administrador y despues con un cliente, se quedaba abierta la posibilidad de volver a entrar como administrador. 
+        //Para evitarlo reiniciamos la session cada vez que haya un login. 
+        $_SESSION = [];
         if($_SERVER['REQUEST_METHOD']==='POST'){
             
             $auth = new Usuario($_POST)?? null;
@@ -19,22 +22,26 @@ class LoginController{
             if(empty($alertas)){
                 //Comprobar que exista el usuario 
                 $usuario = Usuario::where('email',$auth->email);
+                
                 if($usuario){
+                    
                     //Verificamos usuario confirmado y password
                     if($usuario->comprobarPasswordAndVerificado($auth->password)){
-                                            
+                                           
                         $_SESSION['id'] = $usuario->id;
                         $_SESSION['nombre'] = $usuario->nombre. " " . $usuario->apellido;
                         $_SESSION['email'] = $usuario->email;
                         $_SESSION['login'] = true;
                         
-                        if($usuario->admin === "1"){
-                            $_SESSION['admin'] = $usuario->admin ?? null;
-                           header ('Location: /admin');
+                        
+                        if($usuario->admin === "1"){  
+                            $_SESSION['admin'] = $usuario->admin;
+                            header ('Location: /admin');
                         }else{
                             //Es cliente
-                            header('Location: /cita');
+                           header('Location: /cita');
                         }
+                    
                     }                                      
                 }else{
                     Usuario::setAlerta('error','Usuario no encontrado');

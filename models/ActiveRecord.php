@@ -115,6 +115,11 @@ class ActiveRecord {
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
     }
+    //Consulta plana de SQL ( Utilizar cuando los metodos del modelo no son sufcientes)
+    public static function SQL($query) {
+        $resultado = self::consultarSQL($query);
+        return  $resultado ;
+    }
 
     // crea un nuevo registro
     public function crear() {
@@ -128,7 +133,7 @@ class ActiveRecord {
         $query .= " ) VALUES (' "; 
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
-
+        
         //Realizar debug al insert a traves de la API
         // return json_encode(['query' =>$query]);
         
@@ -166,7 +171,9 @@ class ActiveRecord {
     // Eliminar un Registro por su ID
     public function eliminar() {
         $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
+        
         $resultado = self::$db->query($query);
+        
         return $resultado;
     }
 

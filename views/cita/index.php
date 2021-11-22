@@ -2,10 +2,7 @@
     class="nombre-pagina">Crear nueva cita</h1>
 <p  data-cy="heading-descripcion-pagina" 
     class="descripcion-pagina">Elige tus servicios y coloque sus datos</p>
-<div class="barra-nombre">
-    <p>Hola: <?php echo $nombre ?? '' ?></p>
-    <a class="boton" href="/logout">Cerrar sesión</a>
-</div>
+<?php include_once __DIR__ . '/../templates/barra.php' ?>
 <div id="app">
     <nav class="tabs">
         <!--Puedes crear tus propios atributos agregando data- -->
